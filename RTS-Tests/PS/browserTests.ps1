@@ -1,12 +1,10 @@
 ﻿
-param($appName, $serverEnv, $testCategory)
+param($appName, $serverEnv, $testCategory, $workspace)
 
 $appEnv = $appName + '_' + $serverEnv
 $header = '"TestEnvironment": "' + $appName + '_' + $serverEnv + '"'
 
 #Start in PS folder
-
-Write-Host Get-Location
 
 Set-Location ($PSScriptRoot)
 
@@ -28,4 +26,4 @@ sl ..
 
 Write-Host Get-Location
 
-nunit3-console.exe 'RTS-Tests\bin\x86\Release\RTS-Tests.dll'
+nunit3-console.exe '$workspace\RTS-Tests\bin\x86\Release\RTS-Tests.dll'
