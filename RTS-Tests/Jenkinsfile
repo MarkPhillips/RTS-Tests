@@ -1,0 +1,108 @@
+pipeline{
+    agent any
+    stages{
+
+        stage("Source"){
+            steps{
+               echo "========executing Source========"
+               cleanWs()
+               git branch: 'master',
+                  url: 'https://github.com/MarkPhillips/NUnitTest.git'
+            }
+            post{
+                success{
+                    echo "========source download succeeded ========"
+                }
+                failure{
+                    echo "========source download failed========"
+                    emailext (
+                     subject: "Job: ${currentBuild.projectName} Source Download ${currentBuild.result}",
+                     mimeType: 'text/html',
+                     body: """
+                        Source Download Results: ${currentBuild.result}<br/>
+                        Job: ${currentBuild.projectName}<br/>
+                        Build: ${currentBuild.number}<br/>
+                        <p>Check source download results at: <a href='${currentBuild.absoluteUrl}console'>${currentBuild.projectName} build ${currentBuild.number}</a></p>""",
+                     to: 'mgphillips1@gmail.com'
+                  )
+                }
+            }
+        }
+
+         stage("Build"){
+            environment{
+               MSBUILD = "C:/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin/MSBuild.exe"
+               CONFIG='Release'
+               PLATFORM="x86"
+               BUILD_FILE='NUnitTest.sln'
+            }
+            steps{
+               echo "======== Starting Build========"
+               bat "Nuget.exe restore ${BUILD_FILE}"
+               bat "\"${MSBUILD}\" ${BUILD_FILE} /p:Configuration=${env.CONFIG};Platform=${PLATFORM}"
+            }
+            post{
+                success{
+                  echo "========build succeeded ========"
+                }
+                failure{
+                  echo "========build failed========"
+                  emailext (
+                     subject: "Job: ${currentBuild.projectName} Build ${currentBuild.result}",
+                     mimeType: 'text/html',
+                     body: """
+                        Build Results: ${currentBuild.result}<br/>
+                        Job: ${currentBuild.projectName}<br/>
+                        Build: ${currentBuild.number}<br/>
+                        <p>Check build results at: <a href='${currentBuild.absoluteUrl}console'>${currentBuild.projectName} build ${currentBuild.number}</a></p>""",
+                     to: 'mgphillips1@gmail.com'
+                  )
+                  error("Failed to build")
+                }
+            }
+         }
+
+      stage("Browser Tests"){
+            steps{
+               echo "======== Starting Test========"
+               /* bat  "nunit3-console.exe NUnitTest/bin/x86/Release/NUnitTest.dll" */
+			   powershell "RTS-Tests\\PS\\browserTests.ps1 -appName RTS -serverEnv params.ENVIRONMENT -testCategory Checkout"
+            }
+            post{
+                always{
+                  echo "========test complete========"
+                  nunit testResultsPattern: 'TestResult.xml', failIfNoResults: true
+
+                  emailext (
+                     subject: "Job: ${currentBuild.projectName}  ${currentBuild.result}",
+                     mimeType: 'text/html',
+                     body: """
+                        Test Results: ${currentBuild.result}<br/>
+                        Job: ${currentBuild.projectName}<br/>
+                        Build: ${currentBuild.number}<br/>
+                        <p>Check test results at: <a href='${currentBuild.absoluteUrl}testReport/'>${currentBuild.projectName} build ${currentBuild.number}</a></p>""",
+                      to: 'mgphillips1@gmail.com'
+                  )
+
+                  /*mail  to: 'mgphillips1@gmail.com', subject: "Status for Test Project: ${currentBuild.projectName}", body: "RESULT: ${currentBuild.result}\nURL:\t${currentBuild.absoluteUrl}testReport/" */
+               }
+               failure{
+                  echo "========e2e testing failed========"
+                  error("Failed Browsert Test")
+               }
+            }
+        }
+    }
+    post{
+        always{
+            echo "========always========"
+        }
+        success{
+            echo "========pipeline executed successfully ========"
+        }
+        failure{
+            echo "========pipeline execution failed========"
+        }
+    }
+
+}
