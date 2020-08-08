@@ -65,10 +65,11 @@ pipeline{
       stage("Browser Tests"){
             steps{
                echo "======== Starting Test========"
+
                /* bat  "nunit3-console.exe RTS-Tests/bin/x86/Release//RTS-Tests.dll" */
 
-			   echo cd
-			   powershell "RTS-Tests\\PS\\browserTests.ps1 -appName RTS -serverEnv params.ENVIRONMENT -testCategory Checkout"
+			   echo ${workspace}
+			   powershell "\\RTS-Tests\\RTS-Tests\\PS\\browserTests.ps1 -appName RTS -serverEnv params.ENVIRONMENT -testCategory Checkout"
             }
             post{
                 always{
