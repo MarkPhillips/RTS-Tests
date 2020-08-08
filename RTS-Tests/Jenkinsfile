@@ -1,7 +1,7 @@
 pipeline{
     agent any
 	parameters { 
-		string(name: 'serverEnv', defaultValue: 'DV1' description: 'Server Environment')
+		string(name: 'serverEnv', defaultValue: 'DV1', description: 'Server Environment')
 	}
     stages{
 
