@@ -6,13 +6,13 @@ $header = '"TestEnvironment": "' + $appName + '_' + $serverEnv + '"'
 
 #Start in PS folder
 
+Write-Host Get-Location
+
 Set-Location ($PSScriptRoot)
 
 #Move up to project folder
 
 sl ..
-
- 
 
 # update test environment in nunit configuration file
 
