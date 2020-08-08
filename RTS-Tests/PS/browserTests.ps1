@@ -28,4 +28,4 @@ sl ..
 
 Write-Host Get-Location
 
-nunit3-console.exe "RTS-Tests\bin\x86\Release\RTS-Tests.dll"
+nunit3-console.exe 'RTS-Tests\bin\x86\Release\RTS-Tests.dll'
