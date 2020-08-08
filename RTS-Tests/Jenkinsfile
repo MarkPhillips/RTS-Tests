@@ -7,7 +7,7 @@ pipeline{
                echo "========executing Source========"
                cleanWs()
                git branch: 'master',
-                  url: 'https://github.com/MarkPhillips/NUnitTest.git'
+                  url: 'https://github.com/MarkPhillips/RTS-Tests.git'
             }
             post{
                 success{
@@ -34,7 +34,7 @@ pipeline{
                MSBUILD = "C:/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin/MSBuild.exe"
                CONFIG='Release'
                PLATFORM="x86"
-               BUILD_FILE='NUnitTest.sln'
+               BUILD_FILE='RTS-Tests.sln'
             }
             steps{
                echo "======== Starting Build========"
@@ -65,7 +65,7 @@ pipeline{
       stage("Browser Tests"){
             steps{
                echo "======== Starting Test========"
-               /* bat  "nunit3-console.exe NUnitTest/bin/x86/Release/NUnitTest.dll" */
+               /* bat  "nunit3-console.exe RTS-Tests/bin/x86/Release//RTS-Tests.dll" */
 
 			   echo cd
 			   powershell "RTS-Tests\\PS\\browserTests.ps1 -appName RTS -serverEnv params.ENVIRONMENT -testCategory Checkout"
