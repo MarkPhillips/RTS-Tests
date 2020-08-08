@@ -73,7 +73,7 @@ pipeline{
 
 			   echo "${workspace}"
 			   powershell(returnStdout: true, script: "RTS-Tests\\PS\\browserTests.ps1 -appName RTS -serverEnv ${serverEnv} -testCategory Checkout")
-			   #powershell "RTS-Tests\\PS\\browserTests.ps1 -appName RTS -serverEnv ${serverEnv} -testCategory Checkout"
+			   /* powershell "RTS-Tests\\PS\\browserTests.ps1 -appName RTS -serverEnv ${serverEnv} -testCategory Checkout" */
             }
             post{
                 always{
