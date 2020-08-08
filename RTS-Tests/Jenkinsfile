@@ -66,6 +66,8 @@ pipeline{
             steps{
                echo "======== Starting Test========"
                /* bat  "nunit3-console.exe NUnitTest/bin/x86/Release/NUnitTest.dll" */
+
+			   echo cd
 			   powershell "RTS-Tests\\PS\\browserTests.ps1 -appName RTS -serverEnv params.ENVIRONMENT -testCategory Checkout"
             }
             post{
