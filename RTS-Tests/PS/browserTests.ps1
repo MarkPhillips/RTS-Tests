@@ -1,11 +1,11 @@
 ﻿
-param($appName, $serverEnv, $testCategory, $workspace)
+param($appName, $serverEnv, $testCategory)
 
 $appEnv = $appName + '_' + $serverEnv
 $header = '"TestEnvironment": "' + $appName + '_' + $serverEnv + '"'
 
 #Start in PS folder
-
+	
 Set-Location ($PSScriptRoot)
 
 #Move up to project folder
