@@ -42,7 +42,7 @@ pipeline{
             steps{
                echo "======== Starting Build========"
                bat "Nuget.exe restore ${BUILD_FILE}"
-               bat "\"${MSBUILD}\" ${BUILD_FILE} /p:Configuration=${env.CONFIG};Platform=${PLATFORM}"
+               bat "\"${MSBUILD}\" ${BUILD_FILE} /t:Clean,Build /p:Configuration=${env.CONFIG};Platform=${PLATFORM}"
             }
             post{
                 success{
