@@ -14,7 +14,7 @@ namespace RTS_Tests
         {
             // TODO: Add your test code here
             var answer = 42;
-            Assert.That(answer, Is.EqualTo(42), "Some useful error message");
+            Assert.That(answer, Is.EqualTo(41), "Some useful error message");
         }
     }
 }
