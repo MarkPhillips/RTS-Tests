@@ -36,13 +36,14 @@ pipeline{
             environment{
                MSBUILD = "C:/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin/MSBuild.exe"
                CONFIG='Release'
-               PLATFORM="x86"
+               PLATFORM="Any CPU"
                BUILD_FILE='RTS-Tests.sln'
             }
             steps{
                echo "======== Starting Build========"
                bat "Nuget.exe restore ${BUILD_FILE}"
-               bat "\"${MSBUILD}\" ${BUILD_FILE} /t:Clean,Build /p:Configuration=${env.CONFIG};Platform=${PLATFORM}"
+			   bat "\"${MSBUILD}\" RTS-Tests.sln /t:Clean,Build /p:Configuration=${env.CONFIG};Platform=\"${PLATFORM}\""
+              /*bat "\"${MSBUILD}\" ${BUILD_FILE} /t:Clean,Build /p:Configuration=${env.CONFIG};Platform=${PLATFORM}"*/
             }
             post{
                 success{
@@ -64,6 +65,8 @@ pipeline{
                 }
             }
          }
+
+		 /*
 
       stage("Browser Tests"){
             steps{
@@ -98,6 +101,7 @@ pipeline{
                }
             }
         }
+		*/
     }
     post{
         always{
