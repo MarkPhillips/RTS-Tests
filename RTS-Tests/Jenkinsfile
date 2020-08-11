@@ -1,6 +1,6 @@
 pipeline{
     agent any
-	parameters {
+	parameters { 
 		string(name: 'serverEnv', defaultValue: 'DV1', description: 'Server Environment')
 	}
     stages{
@@ -66,6 +66,37 @@ pipeline{
             }
          }
 
+      stage("Browser Tests"){
+            steps{
+               echo "======== Starting Test========"
+
+			   powershell(returnStdout: true, script: "RTS-Tests\\PS\\browserTests.ps1 -appName RTS -serverEnv ${serverEnv} -testCategory Checkout")
+			   /* powershell "RTS-Tests\\PS\\browserTests.ps1 -appName RTS -serverEnv ${serverEnv} -testCategory Checkout " */
+            }
+            post{
+                always{
+                  echo "========test complete========"
+                  nunit testResultsPattern: 'TestResult.xml', failIfNoResults: true
+
+                  emailext (
+                     subject: "Job: ${currentBuild.projectName}  ${currentBuild.result}",
+                     mimeType: 'text/html',
+                     body: """
+                        Test Results: ${currentBuild.result}<br/>
+                        Job: ${currentBuild.projectName}<br/>
+                        Build: ${currentBuild.number}<br/>
+                        <p>Check test results at: <a href='${currentBuild.absoluteUrl}testReport/'>${currentBuild.projectName} build ${currentBuild.number}</a></p>""",
+                      to: 'mgphillips1@gmail.com'
+                  )
+
+                  /*mail  to: 'mgphillips1@gmail.com', subject: "Status for Test Project: ${currentBuild.projectName}", body: "RESULT: ${currentBuild.result}\nURL:\t${currentBuild.absoluteUrl}testReport/" */
+               }
+               failure{
+                  echo "========e2e testing failed========"
+                  error("Failed Browsert Test")
+               }
+            }
+        }
     }
     post{
         always{

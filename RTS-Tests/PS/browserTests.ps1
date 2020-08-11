@@ -24,4 +24,6 @@ sl ..
 
 #execute tests
 
-nunit3-console.exe "RTS-Tests\bin\x86\Release\RTS-Tests.dll"
+nunit3-console.exe "RTS-Tests\bin\Release\RTS-Tests.dll"
+
+#nunit3-console.exe "RTS-Tests\bin\x86\Release\RTS-Tests.dll"
